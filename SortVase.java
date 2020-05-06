@@ -3,47 +3,83 @@ package sortvases;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Stack;
 
-class SortVase{
+class Graph {
 
 	int V;
 	LinkedList<Integer>[] adjListArray;
 
+	// constructor
 	Graph(int V) {
 		this.V = V;
+		// define the size of array as
+		// number of vertices
 		adjListArray = new LinkedList[V + 1];
+
+		// Create a new list for each vertex
+		// such that adjacent nodes can be stored
 
 		for (int i = 1; i <= V; i++) {
 			adjListArray[i] = new LinkedList<Integer>();
 		}
 	}
 
+	// Adds an edge to an undirected graph
 	void addEdge(int src, int dest) {
+		// Add an edge from src to dest.
 		adjListArray[src].add(dest);
+
+		// Since graph is undirected, add an edge from dest
+		// to src also
 		adjListArray[dest].add(src);
 	}
-
-	void DFSUtil(int v, boolean[] visited) {
+	
+	String str ="";
+	ArrayList<String> alist = new ArrayList<String>();
+	
+	String DFSUtil(int v, boolean[] visited) {
+		// Mark the current node as visited and print it
 		visited[v] = true;
-		System.out.print(v + " ");
+		
+		str = v +" ";
+		
+		//System.out.print(v + " ");
+		
+		// Recur for all the vertices
+		// adjacent to this vertex
 		for (int x : adjListArray[v]) {
-			if (!visited[x])
-				DFSUtil(x, visited);
-		}
-
+			if (!visited[x]) {
+				visited[x] = true;
+				//System.out.print(x + " ");
+				str = str + x + " " ;
+			}
+			
+		}	
+		return str ;
 	}
 
+	
 	void connectedComponents() {
+		// Mark all the vertices as not visited
 		boolean[] visited = new boolean[V + 1];
 		for (int v = 1; v <= V; ++v) {
+			str = "";
 			if (!visited[v]) {
-				DFSUtil(v, visited);
-				System.out.println();
+				// print all reachable vertices
+				// from v
+				alist.add(DFSUtil(v, visited));
 			}
 		}
+		
+		for(int h =0 ; h<alist.size(); h++) {
+			System.out.println(alist.get(h));
+		}
+		
 	}
-
+		
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
